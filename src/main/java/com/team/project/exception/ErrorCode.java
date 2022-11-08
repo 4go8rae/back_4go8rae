@@ -21,16 +21,12 @@ public enum ErrorCode {
 
 
     // 404 Not Fount
-    NOT_FOUND_PLACE(HttpStatus.NOT_FOUND, "404", "존재하는 여행지가 아닙니다."),
-    NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "404", "존재하지 않는 후기입니다."),
-    NOT_FOUND_COURSE(HttpStatus.NOT_FOUND, "404", "존재하지 않는 코스입니다."),
-    NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "404", "존재하지 않는 요청입니다."),
-    NOT_FOUND_EVENT(HttpStatus.NOT_FOUND, "404", "존재하지 않는 행사입니다."),
+    NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "404", "존재하는 상품이 아닙니다."),
+    NOT_FOUND_ITEM(HttpStatus.NOT_FOUND, "404", "존재하는 아이템이 아닙니다."),
     NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, "404", "토큰 정보가 없습니다."),
 
     // 500
-    UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "500", "파일 업로드에 실패했습니다."),
-    FAIL_FIND_AREA(HttpStatus.INTERNAL_SERVER_ERROR,"500"," 이 조건으로 게임을 진행할 수가 없습니다.");
+    UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "500", "파일 업로드에 실패했습니다.");
 
 
     private final HttpStatus httpStatus;
