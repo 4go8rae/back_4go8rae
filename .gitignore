@@ -38,7 +38,4 @@ application.properties
 ### VS Code ###
 .vscode/
 
-### AWS S3 ###
-awsS3.yml
-
 
