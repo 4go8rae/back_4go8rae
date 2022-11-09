@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 public class SignupRequestDto {
 
     @NotNull(message = "아이디는 공백이 될수 없습니다.")
-    @Pattern(regexp = "\\w+@\\w+\\.\\w+(\\.\\w+)?", message = "아이디는 이메일 형식이여야 합니다.")
+//    @Pattern(regexp = "\\w+@\\w+\\.\\w+(\\.\\w+)?", message = "아이디는 이메일 형식이여야 합니다.")
     private String username;
 
     @NotNull(message = "비밀번호는 공백이 될 수 없습니다.")
