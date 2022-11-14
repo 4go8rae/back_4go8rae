@@ -178,7 +178,7 @@ public class MemberService {
     @Transactional
     public ResponseEntity<MemberResponseDto> updateNickname(Member memberinfo, NicknameDto nicknameDto) {
         Member member = memberRepository.findByUsername(memberinfo.getUsername()).orElseThrow(
-                () -> new CustomException(ErrorCode.UNAUTHORIZED_LOGIN)
+                () -> new IllegalArgumentException("오류다")
         );
         member.updateNickname(nicknameDto);
 

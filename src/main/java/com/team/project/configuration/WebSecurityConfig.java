@@ -61,12 +61,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 .antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
-
+                .anyRequest().permitAll()
                 // 회원 관리 처리 API 전부를 login 없이 허용
-                .antMatchers("/api/member/**").permitAll()
-                .antMatchers("/api/kakao/**").permitAll()
-                .antMatchers("/api/product/**").permitAll()
-                .anyRequest().authenticated()
+//                .antMatchers("/api/member/**").permitAll()
+//                .antMatchers("/api/kakao/**").permitAll()
+//                .antMatchers("/api/product/**").permitAll()
+//                .antMatchers("/ws/**").permitAll()
+//                .anyRequest().authenticated()
                 // 그 외 어떤 요청이든 '인증'
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
@@ -79,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedOriginPattern("http://dolgo.site");
         configuration.addAllowedOriginPattern("http://sparta-y.shop.s3-website.ap-northeast-2.amazonaws.com");
         configuration.addAllowedOriginPattern("http://localhost:3000");
+        configuration.addAllowedOriginPattern("chat");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("Authorization");

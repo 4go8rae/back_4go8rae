@@ -39,6 +39,19 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     implementation 'commons-codec:commons-codec:1.13'
 
+    //websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker' // 프론트화면구성용
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.webjars:sockjs-client:1.5.1'
+    implementation 'org.webjars:stomp-websocket:2.3.4'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'org.webjars.bower:vue:2.5.16'
+    implementation 'org.webjars.bower:axios:0.17.1'
+    implementation 'org.webjars.bower:bootstrap:4.3.1'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
