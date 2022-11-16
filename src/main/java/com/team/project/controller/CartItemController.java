@@ -33,7 +33,7 @@ public class CartItemController {
     }
 
     //카트 상품삭제
-    @DeleteMapping("/api/auth/cart/delete")
+    @PostMapping("/api/auth/cart/delete")
     public ResponseEntity<String> deleteCartItem(@RequestBody DeleteCartItemRequestDto requestDto) {
         return cartItemService.deleteCartItem(requestDto);
     }
