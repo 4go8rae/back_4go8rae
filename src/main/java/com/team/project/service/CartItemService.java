@@ -4,6 +4,7 @@ import com.team.project.domain.CartItem;
 import com.team.project.domain.Member;
 import com.team.project.domain.Product;
 import com.team.project.dto.request.CartItemRequestDto;
+import com.team.project.dto.request.DeleteCartItemRequestDto;
 import com.team.project.dto.response.CartItemResponseDto;
 import com.team.project.exception.CustomException;
 import com.team.project.exception.ErrorCode;
@@ -88,15 +89,17 @@ public class CartItemService {
 
     //장바구니 상품 삭제
     @Transactional
-    public ResponseEntity<String> deleteCartItem(Long id) {
+    public ResponseEntity<String> deleteCartItem(DeleteCartItemRequestDto requestDto) {
+        StringBuilder result = new StringBuilder("delete cartItem: ");
+        for (Long id: requestDto.getIdList()) {
+            CartItem cartItem = cartItemRepository.findById(id).orElse(null);
+            if (cartItem == null)
+                throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
 
-        CartItem cartItem = cartItemRepository.findById(id).orElse(null);
-        if (cartItem == null)
-            throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
-
-        cartItemRepository.delete(cartItem);
-
-        return ResponseEntity.ok("delete cartItem: " + id);
+            cartItemRepository.delete(cartItem);
+            result.append(id+" ");
+        }
+        return ResponseEntity.ok(result.toString());
     }
 
 
