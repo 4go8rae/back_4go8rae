@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class CartItemResponseDto {
     private Long id;
-    private Long cartItem_id;
+    private Long product_id;
     private String title;
     private int total;
     private int count;

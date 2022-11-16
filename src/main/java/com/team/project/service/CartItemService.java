@@ -58,7 +58,7 @@ public class CartItemService {
 
         return ResponseEntity.ok(CartItemResponseDto.builder()
                 .id(cartItem.getId())
-                .cartItem_id(cartItem.getProduct().getId())
+                .product_id(cartItem.getProduct().getId())
                 .title(cartItem.getProduct().getTitle())
                 .count(cartItem.getCount())
                 .total(cartItem.getTotal())
@@ -77,7 +77,7 @@ public class CartItemService {
         for (CartItem item : cartItemList) {
             itemList.add(CartItemResponseDto.builder()
                     .id(item.getId())
-                    .cartItem_id(item.getProduct().getId())
+                    .product_id(item.getProduct().getId())
                     .title(item.getProduct().getTitle())
                     .count(item.getCount())
                     .total(item.getTotal())
@@ -115,7 +115,7 @@ public class CartItemService {
 
         return ResponseEntity.ok(CartItemResponseDto.builder()
                 .id(cartItem.getId())
-                .cartItem_id(cartItem.getProduct().getId())
+                .product_id(cartItem.getProduct().getId())
                 .title(cartItem.getProduct().getTitle())
                 .count(cartItem.getCount())
                 .total(cartItem.getTotal())
