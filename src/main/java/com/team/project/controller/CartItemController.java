@@ -1,7 +1,7 @@
 package com.team.project.controller;
 
 
-import com.team.project.dto.request.CartItemRequestDto;
+import com.team.project.dto.request.ItemRequestDto;
 import com.team.project.dto.request.DeleteCartItemRequestDto;
 import com.team.project.dto.response.CartItemResponseDto;
 import com.team.project.jwt.UserDetailsImpl;
@@ -22,7 +22,7 @@ public class CartItemController {
     
     //카트에 추가
     @PostMapping("/api/auth/cart")
-    public ResponseEntity<CartItemResponseDto> createCartItem(@RequestBody CartItemRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<CartItemResponseDto> createCartItem(@RequestBody ItemRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return cartItemService.createCartItem(requestDto, userDetails);
     }
 
@@ -40,7 +40,7 @@ public class CartItemController {
 
     //카트 상품 개수 변경
     @PutMapping("/api/auth/cart")
-    public ResponseEntity<CartItemResponseDto> updateCartItem(@RequestBody CartItemRequestDto requestDto) {
+    public ResponseEntity<CartItemResponseDto> updateCartItem(@RequestBody ItemRequestDto requestDto) {
         return cartItemService.updateCartItem(requestDto);
     }
 }
