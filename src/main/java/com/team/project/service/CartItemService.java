@@ -3,7 +3,7 @@ package com.team.project.service;
 import com.team.project.domain.CartItem;
 import com.team.project.domain.Member;
 import com.team.project.domain.Product;
-import com.team.project.dto.request.CartItemRequestDto;
+import com.team.project.dto.request.ItemRequestDto;
 import com.team.project.dto.request.DeleteCartItemRequestDto;
 import com.team.project.dto.response.CartItemResponseDto;
 import com.team.project.exception.CustomException;
@@ -30,7 +30,7 @@ public class CartItemService {
 
     //장바구니 상품 추가
     @Transactional
-    public ResponseEntity<CartItemResponseDto> createCartItem(CartItemRequestDto requestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<CartItemResponseDto> createCartItem(ItemRequestDto requestDto, UserDetailsImpl userDetails) {
 
         Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
         if (member == null)
@@ -105,7 +105,7 @@ public class CartItemService {
 
     //상품 삭제
     @Transactional
-    public ResponseEntity<CartItemResponseDto> updateCartItem(CartItemRequestDto cartItemRequestDto) {
+    public ResponseEntity<CartItemResponseDto> updateCartItem(ItemRequestDto cartItemRequestDto) {
 
         CartItem cartItem = cartItemRepository.findById(cartItemRequestDto.getId()).orElse(null);
         if (cartItem == null)
