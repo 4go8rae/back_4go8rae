@@ -3,6 +3,7 @@ package com.team.project.controller;
 
 
 import com.team.project.dto.request.ItemRequestDto;
+import com.team.project.dto.request.PaymentRequestDto;
 import com.team.project.dto.response.PaymentResponseDto;
 import com.team.project.jwt.UserDetailsImpl;
 import com.team.project.service.PaymentService;
@@ -21,7 +22,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/api/auth/payment")
-    public ResponseEntity<PaymentResponseDto> payment(@RequestBody List<ItemRequestDto> requestDtos, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<PaymentResponseDto> payment(@RequestBody List<PaymentRequestDto> requestDtos, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return paymentService.payment(requestDtos, userDetails);
     }
 

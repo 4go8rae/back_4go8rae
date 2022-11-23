@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @Getter
@@ -19,7 +20,7 @@ public class Payment {
         @Column(name = "payment_id")
         private Long id;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "member_id", nullable = false)
         private Member member;
 
@@ -28,6 +29,4 @@ public class Payment {
 
         @Column(nullable = false)
         private String title;
-
-
 }
