@@ -36,7 +36,7 @@ public class ProductService {
 
 
         return ResponseEntity.ok(ProductResponseDto.builder()
-                .id(product.getId())
+                .product_id(product.getId())
                 .title(product.getTitle())
                 .price(product.getPrice())
                 .image(product.getImage())
@@ -51,7 +51,7 @@ public class ProductService {
             throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
 
         return ResponseEntity.ok(ProductResponseDto.builder()
-                .id(product.getId())
+                .product_id(product.getId())
                 .title(product.getTitle())
                 .price(product.getPrice())
                 .image(product.getImage())
@@ -66,7 +66,7 @@ public class ProductService {
         List<ProductResponseDto> productList = new ArrayList<>();
         for (Product product:products) {
             productList.add(ProductResponseDto.builder()
-                    .id(product.getId())
+                    .product_id(product.getId())
                     .title(product.getTitle())
                     .price(product.getPrice())
                     .image(product.getImage())

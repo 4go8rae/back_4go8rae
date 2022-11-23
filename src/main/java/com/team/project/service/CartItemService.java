@@ -35,7 +35,8 @@ public class CartItemService {
         Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
         if (member == null)
             throw new CustomException(ErrorCode.UNAUTHORIZED_LOGIN);
-        Product product = productRepository.findById(requestDto.getId()).orElse(null);
+
+        Product product = productRepository.findById(requestDto.getProduct_id()).orElse(null);
         if (product == null)
             throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
 
@@ -43,6 +44,7 @@ public class CartItemService {
 
         if(cartItem != null) {
             cartItem.update(cartItem.getCount()+requestDto.getCount());
+
         }
 
         else {
@@ -57,7 +59,7 @@ public class CartItemService {
         }
 
         return ResponseEntity.ok(CartItemResponseDto.builder()
-                .id(cartItem.getId())
+                .cart_id(cartItem.getId())
                 .product_id(cartItem.getProduct().getId())
                 .title(cartItem.getProduct().getTitle())
                 .count(cartItem.getCount())
@@ -76,7 +78,7 @@ public class CartItemService {
         List<CartItemResponseDto> itemList = new ArrayList<>();
         for (CartItem item : cartItemList) {
             itemList.add(CartItemResponseDto.builder()
-                    .id(item.getId())
+                    .cart_id(item.getId())
                     .product_id(item.getProduct().getId())
                     .title(item.getProduct().getTitle())
                     .count(item.getCount())
@@ -107,14 +109,14 @@ public class CartItemService {
     @Transactional
     public ResponseEntity<CartItemResponseDto> updateCartItem(ItemRequestDto cartItemRequestDto) {
 
-        CartItem cartItem = cartItemRepository.findById(cartItemRequestDto.getId()).orElse(null);
+        CartItem cartItem = cartItemRepository.findById(cartItemRequestDto.getProduct_id()).orElse(null);
         if (cartItem == null)
             throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
 
         cartItem.update(cartItemRequestDto.getCount());
 
         return ResponseEntity.ok(CartItemResponseDto.builder()
-                .id(cartItem.getId())
+                .cart_id(cartItem.getId())
                 .product_id(cartItem.getProduct().getId())
                 .title(cartItem.getProduct().getTitle())
                 .count(cartItem.getCount())
