@@ -1,8 +1,7 @@
 package com.team.project.controller;
 
 
-
-import com.team.project.dto.request.ItemRequestDto;
+import com.team.project.dto.request.PaymentConfirmRequestDto;
 import com.team.project.dto.request.PaymentRequestDto;
 import com.team.project.dto.response.PaymentResponseDto;
 import com.team.project.jwt.UserDetailsImpl;
@@ -26,4 +25,8 @@ public class PaymentController {
         return paymentService.payment(requestDtos, userDetails);
     }
 
+    @PostMapping("/api/auth/payment/confirm")
+    public ResponseEntity<Boolean> payment(@RequestBody PaymentConfirmRequestDto requestDtos) {
+        return paymentService.paymentConfirm(requestDtos);
+    }
 }
