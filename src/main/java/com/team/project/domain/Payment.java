@@ -16,7 +16,6 @@ import java.util.List;
 public class Payment {
 
         @Id
-        @GeneratedValue
         @Column(name = "payment_id")
         private Long id;
 

@@ -5,6 +5,7 @@ import com.team.project.domain.CartItem;
 import com.team.project.domain.Member;
 import com.team.project.domain.Payment;
 import com.team.project.domain.Product;
+import com.team.project.dto.request.PaymentConfirmRequestDto;
 import com.team.project.dto.request.PaymentRequestDto;
 import com.team.project.dto.response.PaymentResponseDto;
 import com.team.project.exception.CustomException;
@@ -42,18 +43,18 @@ public class PaymentService {
         Payment payment;
         Long id = System.currentTimeMillis();
 
-            PaymentRequestDto requestDto = requestDtos.get(0);
-            Product product = (productRepository.findById(requestDto.getProduct_id()).orElse(null));
+        PaymentRequestDto requestDto = requestDtos.get(0);
+        Product product = (productRepository.findById(requestDto.getProduct_id()).orElse(null));
 
-            if (product == null)
-                throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
+        if (product == null)
+            throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
 
-            title = product.getTitle();
-            total += requestDto.getCount() * product.getPrice();
+        title = product.getTitle();
+        total += requestDto.getCount() * product.getPrice();
 
-        if(requestDto.getCart_id() != null) {
+        if (requestDto.getCart_id() != null) {
 
-            for(int i = 1; i< requestDtos.size(); i++) {
+            for (int i = 1; i < requestDtos.size(); i++) {
                 PaymentRequestDto paymentRequestDto = requestDtos.get(i);
                 product = (productRepository.findById(paymentRequestDto.getProduct_id()).orElse(null));
                 if (product == null)
@@ -65,10 +66,11 @@ public class PaymentService {
                     throw new CustomException(ErrorCode.NOT_FOUND_ITEM);
 
                 cartItem.setPayment_id(id);
-            };
+            }
+            ;
 
-            if(requestDtos.size() > 1)
-                title += " 외 "+(requestDtos.size()-1);
+            if (requestDtos.size() > 1)
+                title += " 외 " + (requestDtos.size() - 1);
 
         }
 
@@ -90,6 +92,14 @@ public class PaymentService {
     }
 
 
+    public ResponseEntity<Boolean> paymentConfirm(PaymentConfirmRequestDto requestDtos) {
+        Payment payment = paymentRepository.findById(requestDtos.getMerchant_uid()).orElse(null);
+
+        if(payment == null)
+            throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
+
+        return ResponseEntity.ok(payment.getPrice()==requestDtos.getPrice());
+    }
 
 }
 
