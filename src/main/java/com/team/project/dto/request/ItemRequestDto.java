@@ -6,6 +6,7 @@ import lombok.Getter;
 public class ItemRequestDto {
 
     private Long product_id;
+    private Long cart_id;
     private int count;
 
 

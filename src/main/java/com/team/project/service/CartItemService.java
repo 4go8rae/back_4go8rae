@@ -108,7 +108,7 @@ public class CartItemService {
     @Transactional
     public ResponseEntity<CartItemResponseDto> updateCartItem(ItemRequestDto cartItemRequestDto) {
 
-        CartItem cartItem = cartItemRepository.findById(cartItemRequestDto.getProduct_id()).orElse(null);
+        CartItem cartItem = cartItemRepository.findById(cartItemRequestDto.getCart_id()).orElse(null);
         if (cartItem == null)
             throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
 
