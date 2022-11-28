@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -85,7 +87,7 @@ public class PaymentService {
 
 
         return ResponseEntity.ok(PaymentResponseDto.builder()
-                .payment_id(payment.getId())
+                .merchant_uid(payment.getId())
                 .title(payment.getTitle())
                 .price(payment.getPrice())
                 .build());
@@ -100,6 +102,37 @@ public class PaymentService {
 
         return ResponseEntity.ok(payment.getPrice()==requestDtos.getPrice());
     }
+
+
+    public ResponseEntity<List<PaymentResponseDto>> getPaymentList(UserDetailsImpl userDetails){
+
+        Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
+        if (member == null)
+            throw new CustomException(ErrorCode.UNAUTHORIZED_LOGIN);
+
+        List<Payment> paymentList = paymentRepository.findAllByMember(member);
+        List<PaymentResponseDto> responseDtos = new ArrayList<>();
+
+        for (Payment payment:paymentList) {
+            responseDtos.add(PaymentResponseDto.builder()
+                    .merchant_uid(payment.getId())
+                    .title(payment.getTitle())
+                    .price(payment.getPrice())
+                    .build());
+        }
+
+        return ResponseEntity.ok(responseDtos);
+    }
+
+
+
+//    public String getToken(){
+//        String access;
+//
+//        return access;
+//    }
+
+
 
 }
 

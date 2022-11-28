@@ -29,4 +29,9 @@ public class PaymentController {
     public ResponseEntity<Boolean> payment(@RequestBody PaymentConfirmRequestDto requestDtos) {
         return paymentService.paymentConfirm(requestDtos);
     }
+
+    @GetMapping("/api/auth/payment")
+    public ResponseEntity<List<PaymentResponseDto>> payment(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return paymentService.getPaymentList(userDetails);
+    }
 }
