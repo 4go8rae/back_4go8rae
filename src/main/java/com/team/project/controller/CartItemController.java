@@ -2,7 +2,6 @@ package com.team.project.controller;
 
 
 import com.team.project.dto.request.ItemRequestDto;
-import com.team.project.dto.request.DeleteCartItemRequestDto;
 import com.team.project.dto.response.CartItemResponseDto;
 import com.team.project.jwt.UserDetailsImpl;
 import com.team.project.service.CartItemService;
@@ -34,7 +33,7 @@ public class CartItemController {
 
     //카트 상품삭제
     @PostMapping("/api/auth/cart/delete")
-    public ResponseEntity<String> deleteCartItem(@RequestBody DeleteCartItemRequestDto requestDto) {
+    public ResponseEntity<String> deleteCartItem(@RequestBody List<Long> requestDto) {
         return cartItemService.deleteCartItem(requestDto);
     }
 
