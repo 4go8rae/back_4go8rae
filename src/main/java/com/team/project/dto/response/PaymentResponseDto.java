@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PaymentResponseDto {
-    private Long payment_id;
+    private Long merchant_uid;
     private String title;
     private int price;
 }

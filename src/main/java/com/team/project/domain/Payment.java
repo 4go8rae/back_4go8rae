@@ -19,6 +19,10 @@ public class Payment {
         @Column(name = "payment_id")
         private Long id;
 
+        @Column
+        private String imp_uid;
+
+
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "member_id", nullable = false)
         private Member member;
