@@ -1,8 +1,10 @@
 package com.team.project.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.team.project.dto.request.PaymentConfirmRequestDto;
 import com.team.project.dto.request.PaymentRequestDto;
+import com.team.project.dto.response.PaymentDetailResponseDto;
 import com.team.project.dto.response.PaymentResponseDto;
 import com.team.project.jwt.UserDetailsImpl;
 import com.team.project.service.PaymentService;
@@ -33,5 +35,10 @@ public class PaymentController {
     @GetMapping("/api/auth/payment")
     public ResponseEntity<List<PaymentResponseDto>> payment(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return paymentService.getPaymentList(userDetails);
+    }
+
+    @GetMapping("/api/auth/payment/{id}")
+    public ResponseEntity<PaymentDetailResponseDto> getDetail(@PathVariable String id) throws JsonProcessingException {
+        return paymentService.getpayment(id);
     }
 }
