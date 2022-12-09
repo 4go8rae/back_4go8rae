@@ -129,7 +129,7 @@ public class PaymentService {
         if (member == null)
             throw new CustomException(ErrorCode.UNAUTHORIZED_LOGIN);
 
-        List<Payment> paymentList = paymentRepository.findAllByMemberAndImp_uidIsNotNull(member);
+        List<Payment> paymentList = paymentRepository.findAllByMember(member);
         List<PaymentResponseDto> responseDtos = new ArrayList<>();
 
         for (Payment payment : paymentList) {
