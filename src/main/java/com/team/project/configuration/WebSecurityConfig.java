@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -36,12 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
     @Override
     public void configure(WebSecurity web) {
         web
@@ -55,7 +49,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().configurationSource(corsConfigurationSource());
         // 토큰 인증이므로 세션 사용x
         http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.headers().frameOptions().sameOrigin();
+        http.headers().frameOptions().sameOrigin()
+                .and()
+                .formLogin(); // 권한없이 페이지 접근하면 로그인 페이지로 이동한다.
+
 
 
         http.authorizeRequests()
@@ -80,7 +77,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedOriginPattern("http://dolgo.site");
         configuration.addAllowedOriginPattern("http://sparta-y.shop.s3-website.ap-northeast-2.amazonaws.com");
         configuration.addAllowedOriginPattern("http://localhost:3000");
-        configuration.addAllowedOriginPattern("chat");
+        configuration.addAllowedOriginPattern("templates/chat");
+        configuration.addAllowedOriginPattern("templates/chat/**");
+        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("Authorization");
@@ -91,5 +90,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("happydaddy")
+                .password("{noop}1234")
+                .roles("USER")
+                .and()
+                .withUser("angrydaddy")
+                .password("{noop}1234")
+                .roles("USER")
+                .and()
+                .withUser("guest")
+                .password("{noop}1234")
+                .roles("GUEST");
     }
 }
