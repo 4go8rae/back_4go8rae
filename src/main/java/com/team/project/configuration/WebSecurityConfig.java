@@ -91,20 +91,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("happydaddy")
-                .password("{noop}1234")
-                .roles("USER")
-                .and()
-                .withUser("angrydaddy")
-                .password("{noop}1234")
-                .roles("USER")
-                .and()
-                .withUser("guest")
-                .password("{noop}1234")
-                .roles("GUEST");
-    }
 }
