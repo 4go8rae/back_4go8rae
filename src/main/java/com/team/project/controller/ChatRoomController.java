@@ -28,7 +28,7 @@ public class ChatRoomController {
         return chatRoomRepository.findAllRoom();
     }
     // 채팅방 생성
-    @PostMapping("/room")
+    @PostMapping("/creation")
     @ResponseBody
     public ChatRoom createRoom(@RequestParam String name) {
         return chatRoomRepository.createChatRoom(name);
