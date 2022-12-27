@@ -1,6 +1,5 @@
 package com.team.project.service;
 
-import com.team.project.domain.ChatMessage;
 import com.team.project.dto.request.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

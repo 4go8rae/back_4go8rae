@@ -1,11 +1,8 @@
 package com.team.project.controller;
 
 import com.team.project.domain.ChatRoom;
-import com.team.project.repository.ChatRoomRepository;
 import com.team.project.service.ChatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 

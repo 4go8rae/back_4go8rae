@@ -1,7 +1,6 @@
 package com.team.project.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.team.project.domain.ChatMessage;
 import com.team.project.dto.request.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

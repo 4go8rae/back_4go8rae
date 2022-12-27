@@ -22,7 +22,6 @@ public class Payment {
         @Column
         private String imp_uid;
 
-
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "member_id", nullable = false)
         private Member member;
@@ -32,4 +31,8 @@ public class Payment {
 
         @Column(nullable = false)
         private String title;
+
+        public void update(String id){
+                imp_uid = id;
+        }
 }

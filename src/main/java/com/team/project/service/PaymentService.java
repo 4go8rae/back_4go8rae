@@ -8,6 +8,7 @@ import com.team.project.domain.CartItem;
 import com.team.project.domain.Member;
 import com.team.project.domain.Payment;
 import com.team.project.domain.Product;
+import com.team.project.dto.request.PaymentCompleteRequestDto;
 import com.team.project.dto.request.PaymentConfirmRequestDto;
 import com.team.project.dto.request.PaymentRequestDto;
 import com.team.project.dto.response.PaymentDetailResponseDto;
@@ -141,6 +142,50 @@ public class PaymentService {
 
         return ResponseEntity.ok(responseDtos);
     }
+
+    @Transactional
+    public ResponseEntity<Boolean> paymentComplete(PaymentCompleteRequestDto requestDto) throws JsonProcessingException {
+        Payment payment = paymentRepository.findById(requestDto.getMerchant_uid()).orElse(null);
+
+        if (payment == null)
+            throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
+
+        RestTemplate restTemplate = new RestTemplate();
+        String token = getToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        //HTTP 요청 보내기
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                "https://api.iamport.kr/payments/"+requestDto.getImp_uid(),
+                HttpMethod.GET,
+                request,
+                String.class
+        );
+        //HTTP 응답 (JSON) -> 액세스 토큰 파싱
+        //JSON -> JsonNode 객체로 변환
+        String responseBody = response.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(responseBody);
+        JsonNode result = objectMapper.readTree(jsonNode.get("response").toString());
+
+        Long id = result.get("merchant_uid").asLong();
+
+        if(!id.equals(requestDto.getMerchant_uid()))
+            return ResponseEntity.ok(false);
+
+        int price = result.get("amount").asInt();
+
+        if(price != payment.getPrice())
+            return ResponseEntity.ok(false);
+
+        payment.update(requestDto.getImp_uid());
+
+        return ResponseEntity.ok(true);
+    }
+
 
 
     public ResponseEntity<PaymentDetailResponseDto> getpayment(String id) throws JsonProcessingException {
