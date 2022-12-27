@@ -1,7 +1,8 @@
 package com.team.project.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.team.project.dto.request.ChatMessage;
+import com.team.project.domain.ChatMessage;
+import com.team.project.dto.request.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -25,14 +26,17 @@ public class RedisSubscriber implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
+
             // redis에서 발행된 데이터를 받아 deserialize
             String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
             // ChatMessage 객채로 맵핑
-            ChatMessage roomMessage = objectMapper.readValue(publishMessage, ChatMessage.class);
+            ChatMessageDto chatMessage = objectMapper.readValue(publishMessage, ChatMessageDto.class);
             // Websocket 구독자에게 채팅 메시지 Send
-            messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
+            messagingTemplate.convertAndSend("/sub/chat/room" + chatMessage.getRoomId(), chatMessage);
+
         } catch (Exception e) {
             log.error(e.getMessage());
+
         }
     }
 }
