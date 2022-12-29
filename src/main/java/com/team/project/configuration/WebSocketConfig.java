@@ -20,9 +20,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     /**
      * STOMP 사용을 위한 Message Broker 설정
-     * enableSimpleBroker : 메시지를 받을 때의 경로 설정, "/sub" 이 api에 prefix로 붙은 경우, message broker 가 인터셉트 한다.
-     * setApplicationDestinationPrefixes : 메시지를 보낼 때의 경로 설정, 클라이언트가 메시지를 보낼 때 api에 "/pub"이 prefix로 붙은 경우
-     * broker로 메시지가 보내진다.
+     * enableSimpleBroker : 메시지를 받을 때의 경로 설정, "/sub" 으로 시작하는 메시지가 메시지 브로커로 라우팅. 메시지 브로커는 해당 채팅방을 구독하는 클라이언트에게 메시지 전달!
+     * setApplicationDestinationPrefixes : "/pub" 으로 시작하는 모든 메시지는 @MessageMapping 이 달린 메서드로 라우팅
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
