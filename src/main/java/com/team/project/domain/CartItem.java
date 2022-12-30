@@ -28,7 +28,7 @@ public class CartItem {
         private Member member;
 
         @Column
-        private Long payment_id;
+        private Long paymentId;
 
         @Column(nullable = false)
         private int count;
@@ -43,6 +43,6 @@ public class CartItem {
         }
 
         public void setPayment_id(Long id){
-                payment_id = id;
+                paymentId = id;
         }
 }
