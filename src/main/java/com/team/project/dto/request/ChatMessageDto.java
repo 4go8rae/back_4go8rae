@@ -22,6 +22,13 @@ public class ChatMessageDto {
         this.message = message;
     }
 
+    public ChatMessageDto(ChatMessage chatMessage) {
+        this.type = chatMessage.getType();
+        this.roomId = chatMessage.getRoomId();
+        this.sender = chatMessage.getSender();
+        this.message = chatMessage.getMessage();
+    }
+
     public ChatMessage toEntity() {
         return ChatMessage.builder()
                 .type(type)

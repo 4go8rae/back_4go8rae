@@ -27,9 +27,6 @@ public class ChatRoom implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-    private List<ChatMessage> chatMessages = new ArrayList<>();
-
     public ChatRoom(final String roomId, final String name) {
         this.roomId = roomId;
         this.name = name;
@@ -40,10 +37,6 @@ public class ChatRoom implements Serializable {
         chatRoom.roomId = UUID.randomUUID().toString();
         chatRoom.name = name;
         return chatRoom;
-    }
-
-    public void addChatMessage(ChatMessage chatMessage) {
-        this.chatMessages.add(chatMessage);
     }
 
 }
