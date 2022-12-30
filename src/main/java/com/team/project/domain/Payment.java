@@ -20,7 +20,7 @@ public class Payment {
         private Long id;
 
         @Column
-        private String imp_uid;
+        private String impUid;
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "member_id", nullable = false)
@@ -33,6 +33,6 @@ public class Payment {
         private String title;
 
         public void update(String id){
-                imp_uid = id;
+                impUid = id;
         }
 }
