@@ -2,75 +2,50 @@ package com.team.project.service;
 
 import com.team.project.domain.ChatMessage;
 import com.team.project.dto.request.ChatMessageDto;
-import com.team.project.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ChatMessageService {
 
-    private static final String CHAT_MESSAGE = "CHAT_MESSAGE";
-    public static final String ENTER_INFO = "ENTER_INFO";
-    private final ChatMessageRepository chatMessageRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final StringRedisTemplate stringRedisTemplate;
-    private HashOperations<String, String, String> hashOpsEnterInfo;
-    private HashOperations<String, String, List<ChatMessageDto>> opsHashChatMessageDto;
-    private HashOperations<String, String, List<ChatMessage>> opsHashChatMessage;
-    private ValueOperations<String, String> valueOps;
+    private final ChannelTopic channelTopic;
+    private final RedisTemplate redisTemplate;
 
-    @PostConstruct
-    private void init() {
-        opsHashChatMessage = redisTemplate.opsForHash();
-        hashOpsEnterInfo = redisTemplate.opsForHash();
-        valueOps = stringRedisTemplate.opsForValue();
+    // destination정보에서 roomId 추출
+    public String getRoomId(String destination) {
+        int lastIndex = destination.lastIndexOf('/');
+        if (lastIndex != -1)
+            return destination.substring(lastIndex + 1);
+        else
+            throw new IllegalArgumentException("lastIndex 오류입니다.");
     }
 
-    @Transactional
-    public ChatMessage save(ChatMessage chatMessage) {
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChatMessage.class));
-        String roomId = chatMessage.getRoomId();
-        List<ChatMessage> chatMessageList = opsHashChatMessage.get(CHAT_MESSAGE, roomId);
+    // 채팅방에 메시지 발송
+    public void sendChatMessage(ChatMessage chatMessage) {
 
-        if (chatMessageList == null) {
-            chatMessageList = new ArrayList<>();
+        if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
+            chatMessage.setMessage(chatMessage.getSender() + "님이 방에 입장했습니다.");
+        } else if (ChatMessage.MessageType.QUIT.equals(chatMessage.getType())) {
+            chatMessage.setMessage(chatMessage.getSender() + "님이 방에서 나갔습니다.");
         }
-        chatMessageList.add(chatMessage);
-
-        opsHashChatMessage.put(CHAT_MESSAGE, roomId, chatMessageList);
-        redisTemplate.expire(CHAT_MESSAGE,24, TimeUnit.HOURS);
-
-        return chatMessage;
+        log.info("sender, sendMessage: {}, {}", chatMessage.getSender(), chatMessage.getMessage());
+        redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
     }
 
 
-    @Transactional
-    public List<ChatMessage> findAllMessage(String roomId) {
-        List<ChatMessage> chatMessageList = new ArrayList<>();
-
-        if (opsHashChatMessage.size(CHAT_MESSAGE) > 0) {
-
-            return opsHashChatMessage.get(CHAT_MESSAGE, roomId);
-
-        } else {
-            List<ChatMessage> chatMessages = chatMessageRepository.findAllByRoomId(roomId);
-
-            chatMessageList.addAll(chatMessages);
-            opsHashChatMessage.put(CHAT_MESSAGE, roomId, chatMessageList);
-
-            return chatMessageList;
-        }
+    private Page<ChatMessageDto> chatResponseDto(Page<ChatMessage> postSlice) {
+        return postSlice.map(p ->
+                ChatMessageDto.builder()
+                        .type(p.getType())
+                        .roomId(p.getRoomId())
+                        .sender(p.getSender())
+                        .message(p.getMessage())
+                        .build());
     }
 }
