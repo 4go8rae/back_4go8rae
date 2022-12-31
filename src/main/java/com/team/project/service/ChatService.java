@@ -10,7 +10,6 @@ import com.team.project.repository.ChatRoomRepository;
 import com.team.project.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -46,10 +45,9 @@ public class ChatService {
                 .sender(nickname)
                 .message(message.getMessage())
                 .build();
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(chatMessage.getRoomId());
 
         chatMessageRepository.save(chatMessage);
-        ChatMessage chatMessageRedis = chatMessageService.save(chatMessage);
+        chatMessageService.save(chatMessage);
 
         redisPublisher.publish(ChatRoomService.getTopic(chatMessage.getRoomId()), chatMessage);
     }
