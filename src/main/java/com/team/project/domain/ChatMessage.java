@@ -1,11 +1,13 @@
 package com.team.project.domain;
 
+import com.team.project.dto.request.ChatMessageDto;
 import lombok.*;
 import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
 public class ChatMessage {
 
     public enum MessageType {
@@ -24,17 +26,25 @@ public class ChatMessage {
     private String roomId;
 
     @Column(nullable = false)
-    private String sender;
-
-    @Column(nullable = false)
     private String message;
 
+    @Column
+    private String sender;
+
     @Builder
-    public ChatMessage(final MessageType type, final String roomId, final String sender, final String message) {
+    public ChatMessage(final MessageType type, final String roomId, final String message, String sender) {
         this.type = type;
         this.roomId = roomId;
-        this.sender = sender;
         this.message = message;
+        this.sender = sender;
+    }
+
+    @Builder
+    public ChatMessage(ChatMessageDto chatMessageDto) {
+        this.type = chatMessageDto.getType();
+        this.roomId = chatMessageDto.getRoomId();
+        this.message = chatMessageDto.getMessage();
+        this.sender = chatMessageDto.getSender();
     }
 
 }

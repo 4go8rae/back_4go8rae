@@ -1,6 +1,5 @@
 package com.team.project.domain;
 
-import com.team.project.dto.request.ChatRoomDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,9 +36,5 @@ public class ChatRoom implements Serializable {
         this.roomId = roomId;
         this.name = name;
     }
-
-    public ChatRoom(ChatRoomDto chatRoomDto) {
-        this.roomId = chatRoomDto.getRoomId();
-        this.name = chatRoomDto.getName();
-    }
+    
 }

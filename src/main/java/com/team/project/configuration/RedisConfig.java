@@ -42,17 +42,13 @@ public class RedisConfig {
         return new LettuceConnectionFactory(redisStandaloneConfiguration);
     }
 
-    /**
-     * 단일 Topic 사용을 위한 Bean 설정
-     */
+    // 단일 Topic 사용을 위한 Bean 설정
     @Bean
     public ChannelTopic channelTopic() {
         return new ChannelTopic("chatroom");
     }
 
-    /**
-     * redis에 발행(publish)된 메시지 처리를 위한 리스너 설정
-     */
+    // redis pub/sub 메시지를 처리하는 listener 설정
     @Bean
     public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory,
                                                               MessageListenerAdapter listenerAdapter,
@@ -63,14 +59,13 @@ public class RedisConfig {
         return container;
     }
 
-    /**
-     * 실제 메시지를 처리하는 subscriber 설정 추가
-     */
+    // 실제 메시지를 처리하는 subscriber 설정 추가
     @Bean
     public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
-        return new MessageListenerAdapter(subscriber, "onMessage");
+        return new MessageListenerAdapter(subscriber, "sendMessage");
     }
 
+    // 어플리케이션에서 사용할 redisTemplate 설정
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
