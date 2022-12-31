@@ -53,12 +53,11 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatRoomDto createRoom(String roomName) {
+    public ChatRoom createRoom(String roomName) {
         ChatRoom existChatRoom = checkRoom(roomName);
 
         if (existChatRoom == null) {
-            ChatRoomDto chatRoomDto = ChatRoomDto.create(roomName);
-            ChatRoom chatRoom = new ChatRoom(chatRoomDto);
+            ChatRoom chatRoom = ChatRoom.create(roomName);
 
             // redis 저장
             opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
@@ -67,13 +66,13 @@ public class ChatRoomService {
             // db 저장
             chatRoomRepository.save(chatRoom);
 
-            return chatRoomDto;
+            return chatRoom;
         }
 
         String existChatRoomId = existChatRoom.getRoomId();
         String existChatRoomName = existChatRoom.getName();
 
-        return ChatRoomDto.builder()
+        return ChatRoom.builder()
                 .roomId(existChatRoomId)
                 .name(existChatRoomName)
                 .build();
