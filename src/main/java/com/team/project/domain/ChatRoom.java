@@ -2,6 +2,7 @@ package com.team.project.domain;
 
 import com.team.project.dto.request.ChatRoomDto;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
@@ -31,6 +32,7 @@ public class ChatRoom implements Serializable {
         return chatRoom;
     }
 
+    @Builder
     public ChatRoom(final String roomId, final String name) {
         this.roomId = roomId;
         this.name = name;
