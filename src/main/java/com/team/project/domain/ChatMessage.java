@@ -1,13 +1,10 @@
 package com.team.project.domain;
 
-import com.team.project.dto.request.ChatMessageDto;
 import lombok.*;
-
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatMessage {
 
@@ -19,6 +16,7 @@ public class ChatMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MessageType type;
 
@@ -39,13 +37,4 @@ public class ChatMessage {
         this.message = message;
     }
 
-
-    public static ChatMessage of(ChatMessageDto chatMessageDto) {
-        return ChatMessage.builder()
-                .type(chatMessageDto.getType())
-                .sender(chatMessageDto.getSender())
-                .roomId(chatMessageDto.getRoomId())
-                .message(chatMessageDto.getMessage())
-                .build();
-    }
 }

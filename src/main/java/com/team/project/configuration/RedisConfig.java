@@ -33,13 +33,6 @@ public class RedisConfig {
     @Value("${spring.redis.port}")
     private int port;
 
-    /**
-     * 단일 Topic 사용을 위한 Bean 설정
-     */
-    @Bean
-    public ChannelTopic channelTopic() {
-        return new ChannelTopic("chatroom");
-    }
 
     //redis 연결
     @Bean
@@ -47,6 +40,14 @@ public class RedisConfig {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
         redisStandaloneConfiguration.setPassword(password);
         return new LettuceConnectionFactory(redisStandaloneConfiguration);
+    }
+
+    /**
+     * 단일 Topic 사용을 위한 Bean 설정
+     */
+    @Bean
+    public ChannelTopic channelTopic() {
+        return new ChannelTopic("chatroom");
     }
 
     /**

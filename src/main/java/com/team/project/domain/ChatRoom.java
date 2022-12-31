@@ -1,13 +1,14 @@
 package com.team.project.domain;
 
+import com.team.project.dto.request.ChatRoomDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,22 +16,13 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom implements Serializable {
 
-    private static final long serialVersionUTD = 6494678977089006639L;
+    private static final long serialVersionUID = 6494678977089006639L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private String roomId;
-
-    @Column(nullable = false)
     private String name;
-
-    public ChatRoom(final String roomId, final String name) {
-        this.roomId = roomId;
-        this.name = name;
-    }
 
     public static ChatRoom create(String name) {
         ChatRoom chatRoom = new ChatRoom();
@@ -39,4 +31,13 @@ public class ChatRoom implements Serializable {
         return chatRoom;
     }
 
+    public ChatRoom(final String roomId, final String name) {
+        this.roomId = roomId;
+        this.name = name;
+    }
+
+    public ChatRoom(ChatRoomDto chatRoomDto) {
+        this.roomId = chatRoomDto.getRoomId();
+        this.name = chatRoomDto.getName();
+    }
 }
