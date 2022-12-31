@@ -1,99 +1,91 @@
 package com.team.project.service;
 
 import com.team.project.domain.ChatMessage;
+import com.team.project.domain.ChatRoom;
+import com.team.project.domain.Member;
 import com.team.project.dto.request.ChatMessageDto;
+import com.team.project.dto.request.ChatRoomDto;
 import com.team.project.repository.ChatMessageRepository;
+import com.team.project.repository.ChatRoomRepository;
+import com.team.project.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import javax.transaction.Transactional;
+import java.util.*;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ChatService {
 
+    private final RedisPublisher redisPublisher;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomService chatRoomService;
     private final ChatMessageRepository chatMessageRepository;
-    private final ChannelTopic channelTopic;
-    private static final String CHAT_MESSAGE = "CHAT_MESSAGE";
-    private static final String ENTER_INFO = "ENTER_INFO";
-
-    private RedisTemplate<String, Object> redisTemplate;
-    private StringRedisTemplate stringRedisTemplate;
-
-    private HashOperations<String, String, List<ChatMessageDto>> opsHashChatMessage;
-    private HashOperations<String, String, String> hashOpsEnterInfo;
-    private ValueOperations<String, String> valueOps;
-
-
+    private final ChatMessageService chatMessageService;
+    private Map<String, ChatRoomDto> chatRooms;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public ChatMessageDto save(ChatMessageDto chatMessageDto) {
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChatMessage.class));
-        String roomId = chatMessageDto.getRoomId();
-        List<ChatMessageDto> chatMessageList = opsHashChatMessage.get(CHAT_MESSAGE, roomId);
-
-        if (chatMessageList == null) {
-            chatMessageList = new ArrayList<>();
+    public void save(ChatMessageDto message) {
+        if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
+            chatRoomService.enterChatRoom(message.getRoomId());
         }
-        chatMessageList.add(chatMessageDto);
 
-        opsHashChatMessage.put(CHAT_MESSAGE, roomId, chatMessageList);
-        redisTemplate.expire(CHAT_MESSAGE, 24, TimeUnit.HOURS);
-        return chatMessageDto;
+        Optional<Member> member = memberRepository.findByNickname(message.getSender());
+        String nickname = member.get().getNickname();
+
+        ChatMessage chatMessage = ChatMessage.builder()
+                .type(message.getType())
+                .roomId(message.getRoomId())
+                .sender(nickname)
+                .message(message.getMessage())
+                .build();
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(chatMessage.getRoomId());
+
+        chatMessageRepository.save(chatMessage);
+        ChatMessage chatMessageRedis = chatMessageService.save(chatMessage);
+
+        redisPublisher.publish(ChatRoomService.getTopic(chatMessage.getRoomId()), chatMessage);
+    }
+
+    @PostConstruct
+    private void init() {
+        chatRooms = new LinkedHashMap<>();
+    }
+
+    public List<ChatRoomDto> findAllRoom() {
+        List<ChatRoomDto> result = new ArrayList<>(chatRooms.values());
+        Collections.reverse(result);
+        return result;
+    }
+
+    public ChatRoomDto findByRoomId(String roomId) {
+        return chatRooms.get(roomId);
+    }
+
+    public List<ChatMessage> getMessages(String roomId) {
+        return chatMessageService.findAllMessage(roomId);
     }
 
     @Transactional
-    public List<ChatMessageDto> findAllMessage(String roomId) {
-        List<ChatMessageDto> chatMessageDtoList = new ArrayList<>();
+    public List<ChatRoomDto> findAllRoomAll() {
+        List<ChatRoom> chatRoomList = chatRoomRepository.findAll();
+        List<ChatRoomDto> chatRoomDtos = new ArrayList<>();
 
-        if (opsHashChatMessage.size(CHAT_MESSAGE) > 0) {
-            return (opsHashChatMessage.get(CHAT_MESSAGE, roomId));
+        for (ChatRoom chatRoom : chatRoomList) {
+            chatRoomDtos.add(
+                    ChatRoomDto.builder()
+                            .roomId(chatRoom.getRoomId())
+                            .name(chatRoom.getName())
+                            .build());
         }
-        else {
-            List<ChatMessage> chatMessages = chatMessageRepository.findAllByRoomId(roomId);
 
-            for (ChatMessage chatMessage : chatMessages) {
-                ChatMessageDto chatMessageDto = new ChatMessageDto(chatMessage);
-                chatMessageDtoList.add(chatMessageDto);
-            }
-            opsHashChatMessage.put(CHAT_MESSAGE, roomId, chatMessageDtoList);
-            return chatMessageDtoList;
-        }
+        return chatRoomDtos;
     }
-
-    /* destination에서 roomId 가져오기 */
-    public String getRoomId(String destination) {
-        int lastIndex = destination.lastIndexOf('/');
-        if (lastIndex != -1) return destination.substring(lastIndex + 1);
-        else return "";
-    }
-
-    public void sendChatMessage(ChatMessage chatMessage) {
-        if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
-            chatMessage.setMessage(chatMessage.getSender() + "님이 방에 입장하였습니다.");
-        } else if (ChatMessage.MessageType.QUIT.equals(chatMessage.getType())) {
-            chatMessage.setMessage(chatMessage.getSender() + "님이 방에서 나갔습니다.");
-        }
-        redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
-    }
-
-    public void setUserEnterInfo(String roomId, String sessionId) {
-        hashOpsEnterInfo.put(ENTER_INFO, roomId, sessionId);
-    }
-
-    public void removeUserEnterInfo(String roomId, String sessionId) {
-        hashOpsEnterInfo.delete(ENTER_INFO, roomId, sessionId);
-    }
-
 }

@@ -1,6 +1,7 @@
 package com.team.project.controller;
 
 import com.team.project.domain.ChatRoom;
+import com.team.project.dto.request.ChatRoomDto;
 import com.team.project.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,8 @@ public class ChatRoomController {
 
     // 채팅방 생성
     @PostMapping("/room")
-    public ChatRoom createRoom(@RequestParam String name) {
-        return chatRoomService.createChatRoom(name);
+    public ChatRoomDto createRoom(@RequestParam String name) {
+        return chatRoomService.createRoom(name);
     }
 
     // 특정 채팅방 조회
