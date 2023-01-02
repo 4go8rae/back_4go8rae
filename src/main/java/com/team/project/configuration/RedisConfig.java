@@ -99,13 +99,4 @@ public class RedisConfig {
 //                .withInitialCacheConfigurations(cacheConfigurations).build();
 //    }
 
-    //사용할 redisTemplate 설정
-//    @Bean
-//    public RedisTemplate<String, Object> redisTemplate() {
-//        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
-//        redisTemplate.setConnectionFactory(redisConnectionFactory());
-//        return redisTemplate;
-//    }
 }
