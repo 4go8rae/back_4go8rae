@@ -28,11 +28,11 @@ public class ChatMessage {
     @Column(nullable = false)
     private String message;
 
-    @Column
+    @Column(nullable = false)
     private String sender;
 
     @Builder
-    public ChatMessage(final MessageType type, final String roomId, final String message, String sender) {
+    public ChatMessage(final MessageType type, final String roomId, final String message, final String sender) {
         this.type = type;
         this.roomId = roomId;
         this.message = message;
@@ -46,5 +46,4 @@ public class ChatMessage {
         this.message = chatMessageDto.getMessage();
         this.sender = chatMessageDto.getSender();
     }
-
 }

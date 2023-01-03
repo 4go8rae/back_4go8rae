@@ -1,8 +1,10 @@
 package com.team.project.controller;
 
 import com.team.project.domain.ChatRoom;
+import com.team.project.jwt.UserDetailsImpl;
 import com.team.project.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +25,9 @@ public class ChatRoomController {
 
     // 채팅방 생성
     @PostMapping("/room")
-    public ChatRoom createRoom(@RequestParam String name) {
-        return chatRoomService.createChatRoom(name);
+    public ChatRoom createRoom(@RequestParam String name,
+                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return chatRoomService.createChatRoom(name, userDetails);
     }
 
     // 특정 채팅방 조회

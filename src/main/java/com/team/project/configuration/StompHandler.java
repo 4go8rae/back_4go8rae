@@ -1,5 +1,7 @@
 package com.team.project.configuration;
 
+import com.team.project.exception.CustomException;
+import com.team.project.exception.ErrorCode;
 import com.team.project.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class StompHandler implements ChannelInterceptor {
-
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -27,20 +28,23 @@ public class StompHandler implements ChannelInterceptor {
          */
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
+
         /**
          * StompCommand.CONNECT : command로 connect를 시도할 때 로그인 여부 확인
          * StompCommand.SUBSCRIBE : 구독 요청이 들어왔을 때 user가 일치하는지 확인하고 일치한다면 채팅방 목록에 추가
          */
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            String jwtToken = Optional.ofNullable(accessor.getFirstNativeHeader("Authorization")).orElse("UnknownUser");
-            log.info("CONNECT 시 토큰이 들어오는지 : " + jwtToken);
+            String jwtToken = accessor.getFirstNativeHeader("Authorization");
+            log.info("jwtToken = {}", jwtToken);
 
-            boolean isOkToken = jwtTokenProvider.validateToken(jwtToken);
-            log.info("CONNECT 시 토큰검증 : " + isOkToken);
+            if (jwtToken == null)
+                throw new CustomException(ErrorCode.NOT_FOUND_TOKEN);
+            else
+                jwtTokenProvider.validateToken(jwtToken);
 
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             String roomId = Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId");
-            log.info("SUBSCRIBE 시 roomId 들어오는지 : " + roomId);
+            log.info("SUBSCRIBE roomId = {}", roomId);
         }
         return message;
     }

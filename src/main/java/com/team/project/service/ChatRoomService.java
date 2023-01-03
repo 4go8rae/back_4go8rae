@@ -2,6 +2,10 @@ package com.team.project.service;
 
 import com.team.project.domain.ChatRoom;
 import com.team.project.domain.Member;
+import com.team.project.dto.request.ChatRoomDto;
+import com.team.project.exception.CustomException;
+import com.team.project.exception.ErrorCode;
+import com.team.project.jwt.UserDetailsImpl;
 import com.team.project.repository.ChatRoomRepository;
 import com.team.project.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +55,12 @@ public class ChatRoomService {
         return chatRoomRepository.findByRoomId(roomId);
     }
 
-    public ChatRoom createChatRoom(String name) {
+    public ChatRoom createChatRoom(String name, UserDetailsImpl userDetails) {
+        
+        Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
+        if (member == null)
+            throw new CustomException(ErrorCode.UNAUTHORIZED_LOGIN);
+
         ChatRoom chatRoom = ChatRoom.create(name);
         opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
         chatRoomRepository.save(chatRoom);
