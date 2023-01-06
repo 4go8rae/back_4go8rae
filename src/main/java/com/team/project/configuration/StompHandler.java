@@ -34,13 +34,10 @@ public class StompHandler implements ChannelInterceptor {
          * StompCommand.SUBSCRIBE : 구독 요청이 들어왔을 때 user가 일치하는지 확인하고 일치한다면 채팅방 목록에 추가
          */
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            String jwtToken = accessor.getFirstNativeHeader("Authorization");
+            String jwtToken = Optional.ofNullable(accessor.getFirstNativeHeader("Authorization")).orElse("Unknown User");
             log.info("jwtToken = {}", jwtToken);
-
-            if (jwtToken == null)
-                throw new CustomException(ErrorCode.NOT_FOUND_TOKEN);
-            else
-                jwtTokenProvider.validateToken(jwtToken);
+            
+            jwtTokenProvider.validateToken(jwtToken);
 
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             String roomId = getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
