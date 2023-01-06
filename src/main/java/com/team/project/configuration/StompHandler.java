@@ -43,7 +43,7 @@ public class StompHandler implements ChannelInterceptor {
                 jwtTokenProvider.validateToken(jwtToken);
 
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
-            String roomId = Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId");
+            String roomId = getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
             log.info("SUBSCRIBE roomId = {}", roomId);
         }
         return message;
@@ -69,5 +69,13 @@ public class StompHandler implements ChannelInterceptor {
             default:
                 break;
         }
+    }
+
+    public String getRoomId(String destination) {
+        int lastIndex = destination.lastIndexOf('/');
+        if (lastIndex != -1)
+            return destination.substring(lastIndex + 1);
+        else
+            throw new IllegalArgumentException("lastIndex 오류입니다.");
     }
 }
