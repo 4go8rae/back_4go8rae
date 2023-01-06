@@ -11,6 +11,7 @@ import lombok.Getter;
 
 public class ChatMessageDto {
     @Getter
+    @Builder
     public static class Send {
         private String message;
         private Long senderId;
@@ -21,8 +22,8 @@ public class ChatMessageDto {
             return ChatMessage.builder()
                     .message(message)
                     .sender(Member.builder().id(senderId).build())
-                    .chatRoom(ChatRoom.builder().id(roomId).build())
                     .receiver(Member.builder().id(receiverId).build())
+                    .chatRoom(ChatRoom.builder().id(roomId).build())
                     .build();
         }
     }
