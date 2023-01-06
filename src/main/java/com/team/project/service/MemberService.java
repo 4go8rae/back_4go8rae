@@ -97,6 +97,7 @@ public class MemberService {
         tokensProcess(member.getUsername());
 
         return new ResponseEntity<>(MemberResponseDto.builder()
+                .id(member.getId())
                 .username(member.getUsername())
                 .nickname(member.getNickname())
                 .role(member.getRole())

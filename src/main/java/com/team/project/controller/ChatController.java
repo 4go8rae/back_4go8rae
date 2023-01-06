@@ -37,7 +37,7 @@ public class ChatController {
 
     @PostMapping("/api/chat/room")
     public ResponseEntity<ChatRoomDto.Create> JoinChatRoom(@RequestBody ChatRoomDto.Request dto,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(chatRoomService.joinChatRoom(dto, userDetails));
         } catch (IllegalStateException e) {

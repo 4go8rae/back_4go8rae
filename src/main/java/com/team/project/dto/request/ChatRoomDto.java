@@ -5,6 +5,7 @@ import com.team.project.domain.Member;
 import com.team.project.domain.Product;
 import com.team.project.dto.response.MemberResponseDto;
 import com.team.project.dto.response.ProductResponseDto;
+import com.team.project.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,6 +50,8 @@ public class ChatRoomDto {
                 product = ProductResponseDto.builder()
                         .product_id(chatRoom.getProduct().getId())
                         .title(chatRoom.getProduct().getTitle())
+                        .price(chatRoom.getProduct().getPrice())
+                        .seller_id(chatRoom.getProduct().getMember().getId())
                         .build();
 
             return Response.builder()
