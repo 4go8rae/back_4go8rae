@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
@@ -29,6 +31,11 @@ public class Product {
     @Column
     private String image;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ChatRoom> chatRoomList = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
 }
