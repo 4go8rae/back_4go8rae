@@ -3,9 +3,11 @@ package com.team.project.controller;
 
 import com.team.project.dto.request.ProductRequestDto;
 import com.team.project.dto.response.ProductResponseDto;
+import com.team.project.jwt.UserDetailsImpl;
 import com.team.project.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,9 @@ public class ProductController {
     
     //상품추가
     @PostMapping("/api/auth/product")
-    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductRequestDto requestDto) {
-        return productService.createProduct(requestDto);
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductRequestDto requestDto,
+                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return productService.createProduct(requestDto, userDetails);
     }
 
     //상품조회
@@ -37,8 +40,9 @@ public class ProductController {
 
     //상품삭제
     @DeleteMapping("/api/auth/product/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
-        return productService.deleteProduct(id);
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id,
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return productService.deleteProduct(id, userDetails);
     }
 
 }

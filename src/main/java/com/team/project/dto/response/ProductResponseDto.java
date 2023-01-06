@@ -10,4 +10,5 @@ public class ProductResponseDto {
     private String title;
     private int price;
     private String image;
+    private Long seller_id;
 }

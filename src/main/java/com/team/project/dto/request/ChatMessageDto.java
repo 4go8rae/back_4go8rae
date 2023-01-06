@@ -1,25 +1,45 @@
 package com.team.project.dto.request;
 
 import com.team.project.domain.ChatMessage;
+import com.team.project.domain.ChatRoom;
+import com.team.project.domain.Member;
+import com.team.project.dto.response.MemberResponseDto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
+
 public class ChatMessageDto {
+    @Getter
+    public static class Send {
+        private String message;
+        private Long senderId;
+        private Long receiverId;
+        private Long roomId;
 
-    private ChatMessage.MessageType type;
-    private String roomId;
-    private String message;
-    private String sender;
+        public ChatMessage toMessage() {
+            return ChatMessage.builder()
+                    .message(message)
+                    .sender(Member.builder().id(senderId).build())
+                    .chatRoom(ChatRoom.builder().id(roomId).build())
+                    .receiver(Member.builder().id(receiverId).build())
+                    .build();
+        }
+    }
 
+    @Getter
+    @AllArgsConstructor
     @Builder
-    public ChatMessageDto(final ChatMessage.MessageType type, final String roomId, final String message, String sender) {
-        this.type = type;
-        this.roomId = roomId;
-        this.sender = sender;
-        this.message = message;
+    public static class Response {
+        private String message;
+        private MemberResponseDto sender;
+
+        public static Response of(ChatMessage message) {
+            return Response.builder()
+                    .message(message.getMessage())
+                    .sender(MemberResponseDto.of(message.getSender()))
+                    .build();
+        }
     }
 
 }

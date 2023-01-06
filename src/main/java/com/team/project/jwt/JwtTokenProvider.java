@@ -66,10 +66,12 @@ public class JwtTokenProvider {
     }
 
     /**
-     * Jwt Token을 복호화 하여 이름을 얻는다.
+     * JWT 토큰에서 username 조회
      */
-    public String getUserNameFromJwt(String jwt) {
-        return getClaims(jwt).getBody().getId();
+    public String getAuthenticationUsername(String token) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername((this.getUserPk(token)));
+        log.info("tokenProvider의 userDetails : " + userDetails);
+        return userDetails.getUsername();
     }
 
     private Jws<Claims> getClaims(String jwt) {
