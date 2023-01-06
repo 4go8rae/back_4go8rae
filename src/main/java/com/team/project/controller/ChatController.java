@@ -29,14 +29,18 @@ public class ChatController {
     public void chat(ChatMessageDto.Send message) {
         chatMessageService.sendMessage(message);
         messagingTemplate.convertAndSend("sub/chat/room/" + message.getRoomId(), message);
+        log.info("roomId = {}", message.getRoomId());
+        log.info("senderId = {}", message.getSenderId());
+        log.info("receiverId = {}", message.getReceiverId());
+        log.info("message = {}", message.getMessage());
     }
 
     @PostMapping("/api/chat/room")
     public ResponseEntity<ChatRoomDto.Create> JoinChatRoom(@RequestBody ChatRoomDto.Request dto,
-                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(chatRoomService.joinChatRoom(dto, userDetails));
-        } catch(IllegalStateException e) {
+        } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().build();
         }
     }
