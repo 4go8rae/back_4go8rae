@@ -98,6 +98,8 @@ public class ChatRoomDto {
                     .product(ProductResponseDto.builder()
                             .product_id(chatRoom.getProduct().getId())
                             .title(chatRoom.getProduct().getTitle())
+                            .price(chatRoom.getProduct().getPrice())
+                            .seller_id(chatRoom.getProduct().getId())
                             .build())
                     .messages(chatRoom.getMessageList().stream().map(ChatMessageDto.Response::of).collect(Collectors.toList()))
                     .build();
