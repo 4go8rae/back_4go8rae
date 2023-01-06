@@ -28,7 +28,7 @@ public class ChatController {
     @MessageMapping("/chat/message")
     public void chat(ChatMessageDto.Send message) {
         chatMessageService.sendMessage(message);
-        messagingTemplate.convertAndSend("sub/chat/room/" + message.getRoomId(), message);
+        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
         log.info("roomId = {}", message.getRoomId());
         log.info("senderId = {}", message.getSenderId());
         log.info("receiverId = {}", message.getReceiverId());
