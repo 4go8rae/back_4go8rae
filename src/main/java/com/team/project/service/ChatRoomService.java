@@ -9,12 +9,14 @@ import com.team.project.jwt.UserDetailsImpl;
 import com.team.project.repository.ChatRoomRepository;
 import com.team.project.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
@@ -46,6 +48,9 @@ public class ChatRoomService {
         } else {
             ChatRoom newChatRoom = new ChatRoom(dto);
             chatRoomRepository.save(newChatRoom);
+
+            ChatRoom chatRoomInfo = chatRoomRepository.findByCustomerAndSellerAndProduct(newChatRoom.getCustomer(), newChatRoom.getSeller(), newChatRoom.getProduct());
+            log.info("chatroominfo = {}", chatRoomInfo);
             return ChatRoomDto.Create.of(newChatRoom);
         }
     }
