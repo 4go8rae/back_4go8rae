@@ -3,6 +3,7 @@ package com.team.project.controller;
 import com.team.project.dto.request.ChatMessageDto;
 import com.team.project.dto.request.ChatRoomDto;
 import com.team.project.jwt.UserDetailsImpl;
+import com.team.project.repository.ChatRoomRepository;
 import com.team.project.service.ChatMessageService;
 import com.team.project.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -24,6 +26,7 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
+    private final ChatRoomRepository chatRoomRepository;
 
     @MessageMapping("/chat/message")
     public void chat(ChatMessageDto.Send message) {
@@ -37,7 +40,7 @@ public class ChatController {
 
     @PostMapping("/api/chat/room")
     public ResponseEntity<ChatRoomDto.Create> JoinChatRoom(@RequestBody ChatRoomDto.Request dto,
-                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(chatRoomService.joinChatRoom(dto, userDetails));
         } catch (IllegalStateException e) {
