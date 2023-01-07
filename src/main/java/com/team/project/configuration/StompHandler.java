@@ -1,8 +1,5 @@
 package com.team.project.configuration;
 
-import com.team.project.exception.CustomException;
-import com.team.project.exception.ErrorCode;
-import com.team.project.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -18,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class StompHandler implements ChannelInterceptor {
-    private final JwtTokenProvider jwtTokenProvider;
+//    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -34,10 +31,10 @@ public class StompHandler implements ChannelInterceptor {
          * StompCommand.SUBSCRIBE : 구독 요청이 들어왔을 때 user가 일치하는지 확인하고 일치한다면 채팅방 목록에 추가
          */
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            String jwtToken = Optional.ofNullable(accessor.getFirstNativeHeader("Authorization")).orElse("Unknown User");
-            log.info("jwtToken = {}", jwtToken);
-            
-            jwtTokenProvider.validateToken(jwtToken);
+//            String jwtToken = Optional.ofNullable(accessor.getFirstNativeHeader("Authorization")).orElse("Unknown User");
+//            log.info("jwtToken = {}", jwtToken);
+//
+//            jwtTokenProvider.validateToken(jwtToken);
 
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             String roomId = getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));

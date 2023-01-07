@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
-
-    // Redis CacheKeys
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
 
@@ -36,21 +34,13 @@ public class ChatRoomService {
             throw new IllegalStateException("자신과의 채팅방은 만들 수 없습니다.");
         }
 
-        Optional<ChatRoom> chatRoom = chatRoomRepository.findByCustomer_IdAndSeller_IdAndProduct_Id(dto.getCustomerId(), dto.getSellerId(), dto.getProductId());
-        if (chatRoom.isPresent()) {
-            return ChatRoomDto.Create.builder()
-                    .roomId(chatRoom.get().getId())
-                    .sellerId(chatRoom.get().getSeller().getId())
-                    .customerId(chatRoom.get().getCustomer().getId())
-                    .productId(chatRoom.get().getProduct().getId())
-                    .build();
+        ChatRoom chatRoom = chatRoomRepository.findByCustomer_IdAndSeller_IdAndProduct_Id(dto.getCustomerId(), dto.getSellerId(), dto.getProductId()).orElse(null);
+        if (chatRoom != null) {
+            return ChatRoomDto.Create.of(chatRoom);
 
         } else {
             ChatRoom newChatRoom = new ChatRoom(dto);
             chatRoomRepository.save(newChatRoom);
-
-            ChatRoom chatRoomInfo = chatRoomRepository.findByCustomerAndSellerAndProduct(newChatRoom.getCustomer(), newChatRoom.getSeller(), newChatRoom.getProduct());
-            log.info("chatroominfo = {}", chatRoomInfo);
             return ChatRoomDto.Create.of(newChatRoom);
         }
     }
