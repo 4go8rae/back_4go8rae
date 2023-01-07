@@ -1,5 +1,6 @@
 package com.team.project.dto.response;
 
+import com.team.project.domain.ChatRoom;
 import com.team.project.domain.Member;
 import com.team.project.domain.MemberRoleEnum;
 import lombok.Builder;

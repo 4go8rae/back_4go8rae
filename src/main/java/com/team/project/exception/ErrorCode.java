@@ -25,6 +25,7 @@ public enum ErrorCode {
     NOT_FOUND_ITEM(HttpStatus.NOT_FOUND, "404", "존재하는 아이템이 아닙니다."),
     NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, "404", "토큰 정보가 없습니다."),
     NOT_FOUND_ROOM(HttpStatus.NOT_FOUND, "404", "생성된 채팅방이 없습니다."),
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "존재하지 않는 사용자입니다."),
 
     // 500
     UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "500", "파일 업로드에 실패했습니다.");

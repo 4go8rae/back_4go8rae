@@ -5,7 +5,6 @@ import com.team.project.domain.Member;
 import com.team.project.domain.Product;
 import com.team.project.dto.response.MemberResponseDto;
 import com.team.project.dto.response.ProductResponseDto;
-import com.team.project.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -61,26 +60,6 @@ public class ChatRoomDto {
                     .product(product)
                     .build();
         }
-
-    }
-
-    @Getter
-    @AllArgsConstructor
-    @Builder
-    public static class Create {
-        private Long roomId;
-        private Long sellerId;
-        private Long customerId;
-        private Long productId;
-
-        public static Create of(ChatRoom chatRoom) {
-            return Create.builder()
-                    .roomId(chatRoom.getId())
-                    .sellerId(chatRoom.getSeller().getId())
-                    .customerId(chatRoom.getCustomer().getId())
-                    .productId(chatRoom.getProduct().getId())
-                    .build();
-        }
     }
 
     @Getter
@@ -102,7 +81,7 @@ public class ChatRoomDto {
                             .product_id(chatRoom.getProduct().getId())
                             .title(chatRoom.getProduct().getTitle())
                             .price(chatRoom.getProduct().getPrice())
-                            .seller_id(chatRoom.getProduct().getId())
+                            .seller_id(chatRoom.getProduct().getMember().getId())
                             .build())
                     .messages(chatRoom.getMessageList().stream().map(ChatMessageDto.Response::of).collect(Collectors.toList()))
                     .build();
