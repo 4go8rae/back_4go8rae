@@ -37,7 +37,7 @@ public class ChatRoomService {
 
         Member seller = memberRepository.findById(dto.getSellerId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 
-        Product product = productRepository.findByMemberId(dto.getSellerId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+        Product product = productRepository.findByIdAndMemberId(dto.getProductId(), dto.getSellerId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
 
         if(dto.getCustomerId().equals(dto.getSellerId())) {
             throw new IllegalStateException("자신과의 채팅방은 만들 수 없습니다.");

@@ -1,8 +1,6 @@
 package com.team.project.repository;
 
 import com.team.project.domain.ChatRoom;
-import com.team.project.domain.Member;
-import com.team.project.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
