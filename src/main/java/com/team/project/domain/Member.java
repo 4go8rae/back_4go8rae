@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @Getter
@@ -32,6 +33,9 @@ public class Member {
     @Column
     @Enumerated(value = EnumType.STRING)
     private MemberRoleEnum role;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Product> product;
 
     public void updateNickname(NicknameDto nicknameDto){
         this.nickname = nicknameDto.getNickname();

@@ -40,4 +40,12 @@ public class ChatRoom {
         this.product = request.toChatRoom().getProduct();
     }
 
+    @Builder
+    public ChatRoom(ChatRoomDto.Request request, Member seller, Member customer, Product product) {
+        this.seller = seller;
+        this.customer = customer;
+        this.product = product;
+
+    }
+
 }
