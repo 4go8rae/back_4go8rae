@@ -26,7 +26,6 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
-    private final ChatRoomRepository chatRoomRepository;
 
     @MessageMapping("/chat/message")
     public void chat(ChatMessageDto.Send message) {
@@ -34,7 +33,6 @@ public class ChatController {
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
         log.info("roomId = {}", message.getRoomId());
         log.info("senderId = {}", message.getSenderId());
-        log.info("receiverId = {}", message.getReceiverId());
         log.info("message = {}", message.getMessage());
     }
 
